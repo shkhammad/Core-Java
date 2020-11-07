@@ -1,0 +1,116 @@
+1.
+
+If we don't want any method from the parent class to execute in the child class
+we can directly override the methods displaying "N/A" or so.
+
+CODE:-
+public class Test {
+public static void main(String [] args) throws IOException{
+    	Burger b = new Burger("maida","chicken");
+	b.addSauce();
+	b.addLettuce();
+	System.out.println(b.getFinalPrice());	
+    
+	HealthyBurger hb = new HealthyBurger();
+	hb.addSauce();
+	hb.addBeetroot();
+	System.out.println(hb.getFinalPrice());
+  
+	DeluxeBurger db = new DeluxeBurger();
+	db.addLettuce();
+	db.addCarrot();
+	db.addChips();
+	db.addCoke();
+	System.out.println(db.getFinalPrice());
+  }
+}
+	
+class Burger{
+	private String breadRollType;
+	private String meat;
+	private int price;
+	public Burger(String breadRollType, String meat){
+		this.breadRollType = breadRollType;
+		this.meat = meat;
+		this.price = 50;
+	}
+	
+	public void addSauce(){
+		price+=10;
+	}
+	
+	public void addLettuce(){
+		price+=20;
+	}
+	
+	public void addCarrot(){
+		price+=5;
+	}
+	
+	public int getFinalPrice(){
+		return this.price;
+	}
+}
+
+class HealthyBurger extends Burger{
+	private int hbprice=0;
+	public HealthyBurger(){
+		super("brown rye","cow");
+	}
+	
+	public void addSpinach(){
+		hbprice =  hbprice + 25;
+	}
+
+	public void addBeetroot(){
+		hbprice =  hbprice + 30;
+	}
+	
+	public int getHealthyBurgerAdditions(){
+		return this.hbprice;
+	}
+	
+	@Override
+	public int getFinalPrice(){
+		return this.hbprice + super.getFinalPrice();
+	}
+}
+
+class DeluxeBurger extends Burger{
+	private int dbprice = 0;
+	public DeluxeBurger(){
+		super("brown rye","deer");
+	}
+	
+	public void addChips(){
+		dbprice =  dbprice + 50;
+	}
+	
+	public void addCoke(){
+		dbprice =  dbprice + 100;
+	}
+	
+	public int getDeluxeBurgerAdditions(){
+		return this.dbprice;
+	}
+	
+	@Override
+	public void addSauce(){
+		System.out.println("Cannot add sauce !!");
+	}
+	
+	@Override
+	public void addLettuce(){
+		System.out.println("Cannot add lettuce !!");
+	}
+	
+	@Override
+	public void addCarrot(){
+		System.out.println("Cannot add carrot !!");
+	}
+	
+	@Override
+	public int getFinalPrice(){
+		return this.dbprice + super.getFinalPrice();
+	}
+}

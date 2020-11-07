@@ -1,0 +1,166 @@
+1.
+Composition means creating components which can be used by the class, i.e
+basically creating another class for the components, whose objects are 
+further merged into the main class (comprising of the components)
+Ex: Room --> Door + Windows (components)
+Door -- > Handle (component)
+ 
+The objects of all the components then are further merged into the 
+'Room' class
+public class Test {
+  public static void main(String [] args) throws IOException{
+	Handle h = new Handle("iron","titanium");
+	//composition
+	Door d = new Door(h,"brown","wood");
+	Window w = new Window("tempered","aluminium");
+	//composition
+	Room r = new Room(d,w);
+	System.out.println(r.getDoor().getHandle().getPart2());	
+  
+  }
+}
+	
+class Room{
+	private Door door;
+	private Window window;
+	public Room(Door door, Window window){
+		this.door = door;
+		this.window = window;
+	}
+	public Door getDoor(){
+		return this.door;
+	}
+	public Window getWindow(){
+		return this.window;
+	}
+}
+
+class Door{
+	private Handle handle;
+	private String color;
+	private String material;
+	public Door(Handle handle, String color, String material){
+		this.handle = handle;
+		this.color = color;
+		this.material = material;
+	}
+	public Handle getHandle(){
+		return this.handle;
+	}
+	public String getColor(){
+		return this.color;
+	}
+	public String getMaterial(){
+		return this.material;
+	}
+}
+
+class Window{
+	private String glass;
+	private String frame;
+	public Window(String glass, String frame){
+		this.glass = glass;
+		this.frame = frame;
+	}
+	public String getGlass(){
+		return this.glass;
+	}
+	public String getFrame(){
+		return this.frame;
+	}
+}
+
+class Handle{
+	private String part1;
+	private String part2;
+	public Handle(String part1, String part2){
+		this.part1 = part1;
+		this.part2 = part2;
+	}
+	public String getPart1(){
+		return this.part1;
+	}
+	public String getPart2(){
+		return this.part2;
+	}
+}
+
+2.
+
+public class Test {
+  public static void main(String [] args) throws IOException{
+    Handle h = new Handle("iron","titanium");
+	//composition
+	Door d = new Door(h,"brown","wood");
+	Window w = new Window("tempered","aluminium");
+	//composition
+	Room r = new Room(d,w);
+	System.out.println(r.getWindowFrame());	
+  
+  }
+}
+	
+class Room{
+	private Door door;
+	private Window window;
+	public Room(Door door, Window window){
+		this.door = door;
+		this.window = window;
+	}
+	//here, we are hiding the components of class Room
+	//i.e door and window and directly returning the required
+	//things, ex: window-frame
+	public String getWindowFrame(){
+		return this.window.getFrame();	
+	}
+}
+
+class Door{
+	private Handle handle;
+	private String color;
+	private String material;
+	public Door(Handle handle, String color, String material){
+		this.handle = handle;
+		this.color = color;
+		this.material = material;
+	}
+	public Handle getHandle(){
+		return this.handle;
+	}
+	public String getColor(){
+		return this.color;
+	}
+	public String getMaterial(){
+		return this.material;
+	}
+}
+
+class Window{
+	private String glass;
+	private String frame;
+	public Window(String glass, String frame){
+		this.glass = glass;
+		this.frame = frame;
+	}
+	public String getGlass(){
+		return this.glass;
+	}
+	public String getFrame(){
+		return this.frame;
+	}
+}
+
+class Handle{
+	private String part1;
+	private String part2;
+	public Handle(String part1, String part2){
+		this.part1 = part1;
+		this.part2 = part2;
+	}
+	public String getPart1(){
+		return this.part1;
+	}
+	public String getPart2(){
+		return this.part2;
+	}
+}

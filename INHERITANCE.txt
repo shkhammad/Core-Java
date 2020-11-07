@@ -1,0 +1,221 @@
+1.
+
+public class Rectangle {
+    private double width,length;
+    public Rectangle(double width, double length){
+        if(width>0)
+        this.width = width;
+        else this.width = 0;
+        if(length>0)
+        this.length = length;
+        else this.length = 0;
+    }
+    public double getWidth(){
+        return this.width;
+    }
+    public double getLength(){
+        return this.length;
+    }
+    public double getArea(){
+        return this.width * this.length;
+    }
+}
+
+public class Cuboid extends Rectangle{
+    private double height;
+    public Cuboid(double width, double length, double height){
+        //it should be the first line
+	//calling the constructor of the parent class(Rectangle)
+	super(width,length);
+        if(height>0)
+        this.height = height;
+        else this.height = 0;
+    }
+    public double getHeight(){
+        return this.height;
+    }
+    public double getVolume(){
+        //calling the getArea method of the parent class(Rectangle)
+	return super.getArea() * this.height;
+    }
+}
+
+2.
+
+All objects have references. They are assigned values based on the 
+references. 
+public class Test {
+  public static void main(String [] args) throws IOException{
+    Car c = new Car("fiat");
+    System.out.println(c.getName()); 
+     
+    //Now t points to c
+    Car t = c;
+    System.out.println(t.getName()); 
+     
+    Car c2 = new Car("punto");
+    System.out.println(c2.getName()); 
+    
+    //Now t points to c2
+    t = c2;
+    System.out.println(t.getName()); 
+    	
+  }
+}
+
+class Car{
+	
+	private String name;
+	public Car(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+}
+
+3.
+
+Static Methods vs Instance Methods
+
+public class Test {
+  public static void main(String [] args) throws IOException{
+    Car c = new Car("fiat");
+    //getName method in the Car class is not declared as static
+    //so to access it requires the creation of object of the Car class
+    System.out.println(c.getName()); 
+    //getColor method is static method so no need for object creation 
+    //of the Car class we use (ClassName.methodName()) to access it	 
+    Car.getColor("yellow");	
+ }
+}
+
+class Car{
+	
+	private String name;
+	
+	public Car(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public static void getColor(String color){
+		System.out.println(color);
+	}
+}
+
+4.
+
+Static Variables vs Instance Variables
+
+public class Test {
+  public static void main(String [] args) throws IOException{
+   	//here color is a static variable, whereas name is non-static 
+	//in the Car class
+	Car c = new Car("fiat","yellow");
+    	System.out.println(c.getName()); 
+	System.out.println(c.getColor()); 
+  
+	Car c2 = new Car("punto","green");
+	System.out.println(c2.getName()); 
+	System.out.println(c2.getColor());
+	
+	//since color variable is static and was changed upon the creation
+	// of the object c2, it will take overwrite the values of all the
+	// previous objects here c to the last value(c2)
+	//But name would be remain unchanged as it was unstatic in the 
+	// Car class
+	System.out.println(c.getColor()); 
+	System.out.println(c.getName());  
+  }
+}
+
+class Car{
+	
+	private String name;
+	private  static String color;
+	
+	public Car(String name, String color){
+		this.name = name;
+		this.color = color;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public static String getColor(){
+		return color;
+	}
+}
+
+5.
+
+Covariant type
+
+public class Test {
+  public static void main(String [] args) throws IOException{
+    	Burger b = new Burger();
+    
+     	BurgerFactory bf = new BurgerFactory();
+    	b = bf.getBurger(); 
+	
+	HealthyBurger hb = new HealthyBurger();
+	
+	HealthyBurgerFactory hbf = new HealthyBurgerFactory();
+	hb = hbf.getBurger();	
+  }
+}
+
+//parent class
+class Burger{
+
+}
+
+//child class
+class HealthyBurger extends Burger{
+
+}
+
+//parent class
+class BurgerFactory{
+	public Burger getBurger(){
+		System.out.println("Burger");
+		return new Burger();
+	}
+}
+
+//child class
+class HealthyBurgerFactory extends BurgerFactory{
+	
+	//we are overriding method getBurger of the parent class BurgerFactory
+	//we are also changing the return type from Burger(parent) to HealthyBurger(child)
+	//it is called as covariant type
+	//we can do this in java if burger class is parent and healthyburger 
+	//is its child, here burger class has only one child (healthyburger)
+	//we can change it to the type of the child class 
+	@Override
+	public HealthyBurger getBurger(){
+		System.out.println("HealthyBurger");
+		return new HealthyBurger();
+	}
+}
+
+6.
+
+this vs super
+
+this -- > instance or anything of the current class
+super -- > constructor/method called of the super class(parent class)
+	   from the child class
+
+7.
+
+overloading vs overriding
+
+overloading -- > same method name but different method parameters
+overriding -- > same method name and same parameters(@Override -> is used as the annotation)

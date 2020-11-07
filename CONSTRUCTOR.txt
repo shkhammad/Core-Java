@@ -1,0 +1,48 @@
+1.
+
+public class Test {
+public static void main(String [] args) throws IOException{
+
+     //overloading the constructors	
+     VipCustomer vc = new VipCustomer();
+     System.out.println(vc.getName());
+    
+     VipCustomer vc2 = new VipCustomer("sikandar","balh@");
+     System.out.println(vc2.getCreditLimit());
+    
+     VipCustomer vc3 = new VipCustomer("sikandar","balh@",200000);
+     System.out.println(vc3.getCreditLimit());
+    	
+  }
+} 
+
+class VipCustomer{
+	private String name,email;
+	private double creditLimit;
+	public VipCustomer(){
+		//it should be the first line
+		//calling other constructor inside constructor with default 
+		//values
+		this("hammad","sikandarbakht59@gmail.com",100000);
+	}
+	public VipCustomer(String name, String email){
+		//it should be the first line
+		this(name,email,100000);
+	}
+	public VipCustomer(String name, String email, double creditLimit){
+		this.name = name;
+		this.email = email;
+		this.creditLimit = creditLimit;	
+	}
+	public String getName(){
+		return this.name;
+	}
+	public String getEmail(){
+		return this.email;
+	}
+	public double getCreditLimit(){
+		return this.creditLimit;
+	}
+}
+
+2. 

@@ -1,0 +1,47 @@
+1.
+Encapsulation means hiding the internal details of the class (fields,methods,etc),
+so that it cannot be changed externally by the other classes (by setting it to private/by putting if-else conditions).
+Even if we change/alter the names of variable inside the class our code
+would not get affected outside (the classes which are accessing).
+
+
+public class Test {
+  public static void main(String [] args) throws IOException{
+	Printer p = new Printer(200,20,false);
+	p.pagesPrinting();
+	p.pagesPrinting();
+	p.pagesPrinting();
+	p.pagesPrinting();
+	p.pagesPrinting();
+	
+	System.out.println(p.pagesPrinted());	
+    System.out.println(p.getTonerLevel());
+  }
+}
+	
+class Printer{
+	 private int tLevel=0;
+	 private int numberOfPagesPrinted=0;
+	 private boolean duplexPrinter;
+	 
+	 public Printer(int tLevel, int numberOfPagesPrinted, boolean duplexPrinter){
+		 if(tLevel>=0 && tLevel<=100)
+		 this.tLevel = tLevel;
+		 if(numberOfPagesPrinted == 0)
+		 this.numberOfPagesPrinted = numberOfPagesPrinted;
+		 this.duplexPrinter = duplexPrinter;
+	 }
+	 
+	 public void pagesPrinting(){
+		this.numberOfPagesPrinted+=1;
+	 }
+	 
+	 public int pagesPrinted(){
+		return this.numberOfPagesPrinted;
+	 }
+	 
+	 public int getTonerLevel(){
+		return this.tLevel;
+	 }
+}
+	

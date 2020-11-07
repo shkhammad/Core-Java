@@ -1,0 +1,101 @@
+1.
+
+Polymorphism means overriding the function in the child class whose body was
+different in the parent class.
+Every class has superclass as the 'Object' class and here we're using the getClass
+method from the Object class and then getSimpleName method which returns the name of the class (from the class 'Class')
+Here we also used inline-class-syntax for 'Audi' where we overrided the method accelerate of the 'Car' class.
+The compiler will give priority for the method which is overrided in the inline class.
+//Output:  The car is acclerating at 50 m/s2
+ 
+public class Test {
+public static void main(String [] args) throws IOException{
+    Car c1 = new Santro(2);
+    System.out.println(c1.getWheels());
+	c1.accelerate();
+	System.out.println(c1.getName());
+  
+	Car c2 = new Ferrari(2);
+    System.out.println(c2.getWheels());
+	c2.accelerate();
+  
+    Car c3 = new Car("Audi",5){
+	 	
+	 	@Override
+	 	public void accelerate(){
+		System.out.println("The car is acclerating at 50 m/s2");
+		}
+			
+	};
+    
+    c3.accelerate();
+    System.out.println(c3.getName());
+  }
+}
+	
+class Car{
+ private String name;
+ private boolean engine = true;
+ private int wheels = 4,cylinders;
+ 
+ public Car(String name,int cylinders){
+	 this.name = name;
+	 this.cylinders = cylinders;
+ }
+ 
+ public void startEngine(){
+	System.out.println("Engine starting...");
+ }
+ 
+ public void accelerate(){
+	System.out.println("The car is acclerating at 10 m/s2");
+ }
+ 
+ public void brake(){
+	System.out.println("Brakes applied !!");
+ }
+ 
+ public String getName(){
+	return this.name;
+ } 
+ 
+ public int getWheels(){
+	return this.wheels;
+ }
+ 
+ public int getCylinders(){
+	return this.cylinders;
+ }
+ 
+}
+
+class Santro extends Car{
+	
+	public Santro(int cylinders){
+		super("Santro",cylinders);
+	}
+	
+	@Override
+	public void accelerate(){
+		System.out.println("The car is acclerating at 8 m/s2");
+	}
+	
+	@Override
+	public String getName(){
+		return getClass().getSimpleName();
+	}
+}
+
+
+class Ferrari extends Car{
+	private int cylinders;
+	
+	public Ferrari(int cylinders){
+		super("Ferrari",cylinders);
+	}
+	
+	@Override
+	public void accelerate(){
+		System.out.println("The car is acclerating at 80 m/s2");
+	}
+}
