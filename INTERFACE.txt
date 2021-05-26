@@ -1,0 +1,197 @@
+An interface declaration consists of modifiers, the keyword interface, the interface name, a comma-separated list of parent interfaces (if any), and the interface body. For example:
+// Example
+public interface GroupedInterface extends Interface1, Interface2, Interface3 {
+
+    // constant declarations
+    
+    // base of natural logarithms
+    double E = 2.718282;
+ 
+    // method signatures
+    void doSomething (int i, double x);
+    int doSomethingElse(String s);
+}
+
+The interface body can contain abstract methods, default methods, and static methods. 
+An abstract method within an interface is followed by a semicolon, but no braces (an abstract method does not contain an implementation). 
+Default methods are defined with the default modifier, and static methods with the static keyword. 
+All abstract, default, and static methods in an interface are implicitly public, so you can omit the public modifier.
+This will remain same for constant declarations as well (they are also implicitly public,final,static).
+
+Implementing an interface:
+
+Here, we have addition class which calculates sum of two numbers.
+The addition class implements ICompare interface which has sumCompare method, we can override it in our Addition class
+and compare sum of two objects and return some value. This method has an object of the interface (not instantiated) itself which corresponds to the implemented class (Addition class)
+in the parameter.
+In the main method we pass another object of the addition class while calling the sumCompare method of the addition class with the current object.
+
+For our Subtraction class we need to do the same thing (typecasting and all). But Subtraction class implements IComparePlus.
+Whenever we want to make changes to the existing interface don't make changes to the interface, instead extend it by another interface as in this case
+IComparePlus extends ICompare (much shorter way, other wise we have to change the method definition and name  in the implemented classes as well) 
+ 
+
+
+CODE:
+public class Basic {
+	public static void main(String args[]) {
+		Addition n1 = new Addition(5,6);
+		System.out.println(n1.sum());
+		System.out.println(n1.sumCompare(new Addition(12,6)));
+	
+		Subtraction n2 = new Subtraction(8,7);
+		System.out.println(n2.diff());
+		System.out.println(n2.diffCompare(new Subtraction(7,8)));
+	}
+}
+
+class Addition implements ICompare{
+	private int x,y;
+	public Addition(int x, int y) {
+		this.x = x ;
+		this.y = y;
+	}
+	
+	public int sum() {
+		return this.x + this.y;
+	}
+	
+	@Override
+	//Here ICompare ic corresponds to addition class, but inside the method we need to typecast it into Addition class, this will become our other object
+	that we need to compare with the current object (this.sum() > otherObj.sum()) this --> current object
+	public int sumCompare(ICompare ic) {
+		Addition otherObj = (Addition)ic;
+		if(this.sum()>otherObj.sum()) return 1;
+		else if(otherObj.sum()>this.sum()) return -1;
+		return 0;
+	}
+}
+
+class Subtraction implements IComparePlus{
+	private int x,y;
+	public Subtraction(int x, int y) {
+		this.x = x ;
+		this.y = y;
+	}
+	
+	public int diff() {
+		return this.x - this.y;
+	}
+	
+	@Override
+	public int sumCompare(ICompare ic) {
+		return 0;
+	}
+
+	@Override
+	public int diffCompare(IComparePlus ic) {
+		Subtraction otherObj = (Subtraction)ic;
+		if(this.diff() > otherObj.diff()) return 1;
+		else if(this.diff() < otherObj.diff()) return -1;
+		return 0;
+	}
+}
+
+interface ICompare{
+	int sumCompare(ICompare ic);
+}
+
+interface IComparePlus extends ICompare{
+	int diffCompare(IComparePlus ic);
+}
+
+Using interface as an type:
+We can use interface as an type but it will represent as an object of the implemented class, so we can call methods of the implemented class.
+
+CODE:
+public class Basic {
+	public static void main(String args[]) {
+		Addition n1 = new Addition(5,6);
+		System.out.println(n1.sum());
+		System.out.println(n1.sumCompare(new Addition(12,6)));
+		
+		//Here ICompare --> Addition, instantiation of the object i1 via the Addition class
+		ICompare i1 = new Addition(3,4);
+		//Typecasting the i1 object with the Addition class to call it's method which are not common to the ICompare interface
+		System.out.println(((Addition)i1).sum());
+		//Here as the method is common to both the interface and the class there is no need of typecasting (direct call and object pass)
+		System.out.println(i1.sumCompare(new Addition(1,2)));
+		//We can use such declartions of the interface object as above if the method is common to both the class and the interface (genericity purposes)
+		//else regular declartions are fine
+		
+	}
+}
+
+class Addition implements ICompare{
+	private int x,y;
+	public Addition(int x, int y) {
+		this.x = x ;
+		this.y = y;
+	}
+	
+	public int sum() {
+		return this.x + this.y;
+	}
+	
+	@Override
+	public int sumCompare(ICompare ic) {
+		Addition otherObj = (Addition)ic;
+		if(this.sum()>otherObj.sum()) return 1;
+		else if(otherObj.sum()>this.sum()) return -1;
+		return 0;
+	}
+}
+
+interface ICompare{
+	int sumCompare(ICompare ic);
+
+}
+
+Default Methods:
+Default methods are those methods which are fixed and time-saver and offers backwards compatibility. For example, if we want to add some method to our interface
+we need to add it and then rewrite it in our all implemented classes (override it). So to solve this problem we have default methods with default keyword, such methods
+are only special to the interfaces, in this case we implement the entire method in the interface itself (once) and that's it. Now all our classes which implement our 
+interface will have this inherit to them automatically, no need to override it in the classes.
+
+If we extend the interface with the default method to another interface and not mention the default method at all, which lets your extended interface inherit the default
+method automatically (no change)
+CODE:
+  
+public class Basic {
+	public static void main(String args[]) {
+		Addition n1 = new Addition(5,6);
+		System.out.println(n1.sum());
+		System.out.println(n1.sumCompare(new Addition(12,6)));
+	
+		n1.doSomethingGreat();	
+		//prints out something		
+	}
+}
+
+class Addition implements ICompare{
+	private int x,y;
+	public Addition(int x, int y) {
+		this.x = x ;
+		this.y = y;
+	}
+	
+	public int sum() {
+		return this.x + this.y;
+	}
+	
+	@Override
+	public int sumCompare(ICompare ic) {
+		Addition otherObj = (Addition)ic;
+		if(this.sum()>otherObj.sum()) return 1;
+		else if(otherObj.sum()>this.sum()) return -1;
+		return 0;
+	}
+	//Here we have not overrided the doSomethingGreat method in this class as it is default, i.e inherited automatically to the implemented class.
+}
+
+interface ICompare{
+	int sumCompare(ICompare ic);
+	default void doSomethingGreat() {
+		System.out.println("Do something great !!!");
+	}
+}

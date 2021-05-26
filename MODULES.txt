@@ -1,0 +1,14 @@
+MODULES:
+Note:
+Implement it thoroughly, when javafx project is ready (will be in jdk-8), we'll try to refactor (design) it by using the module system (jdk-9)
+
+Modules in java is vast topic (i already know a little bit not implemented it due to scarcity of resources),
+following links are very useful to revise and go in-depth about Java-Module-System:
+
+1. https://www.oracle.com/corporate/features/understanding-java-9-modules.html
+2. https://blogs.oracle.com/java/modular-development
+3. https://codenuclear.com/how-to-create-java-9-module-eclipse/#:~:text=Click%20on%20Java%20%3E%20Installed%20JREs,to%20create%20our%20first%20module. 
+4. http://tutorials.jenkov.com/java/modules.html
+5. Tim's course --> Module system in java 9 and Migrating java projects to java 9
+6. Search "java module system tutorial" on youtube (mainly oracle videos)
+7. https://gorillalogic.com/blog/understanding-java-9-modules/

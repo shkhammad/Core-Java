@@ -1,0 +1,440 @@
+In java, Nested classes are divided into two categories: static and non-static. 
+Nested classes that are declared static are called static nested classes. 
+Non-static nested classes are called inner classes.
+
+Example:
+
+class OuterClass {
+    ...
+    //Following two below are the types of nested classes
+    static class StaticNestedClass {
+        ...
+    }
+    class InnerClass {
+        ...
+    }
+}
+
+Uses:
+1. It is a way of logically grouping classes that are only used in one place, nested classes are like "helper" classes with only specific (desired) functionality.
+2.It increases encapsulation.
+3.It can lead to more readable and maintainable code. (Rememeber FRM --> FLEXIBLE, READIBLE, MAINTAINABLE)
+
+Type 1:
+Static Nested Classes:
+To create an object for the static nested class we use,
+OuterClass.StaticNestedClass nestedObj = new OuterClass.StaticNestedClass();
+
+CODE:
+public class Test {
+ 
+ final static PrintWriter out = new PrintWriter(System.out);
+ 
+ //Here, we have our static nested class   
+ static class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(
+                new InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt() { return Integer.parseInt(next()); }
+ 
+        long nextLong() { return Long.parseLong(next()); }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+   
+            try {
+                str = br.readLine();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+  }
+  public static void main(String [] args) throws IOException{
+  	//Here we instantiate the static nested class object as per the above described method
+	//Test --> Outer class/Top level class
+    //Fast Reader --> Static nested class
+	Test.FastReader in = new Test.FastReader();
+	int b = in.nextInt();
+	out.println(b);
+	out.close();	
+  }
+} 
+
+Type 2:
+Inner Classes (non-static):
+To instantiate an inner class, you must first instantiate the outer class. Then, create the inner object within the outer object with this syntax:
+
+OuterClass outObj = new OuterClass();
+OuterClass.InnerClass inObj = outObj.new InnerClass();
+
+CODE:
+
+public class Test {
+ 
+ final static PrintWriter out = new PrintWriter(System.out);
+ 
+ //Here, we have our inner class   
+ class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+ 
+        public FastReader()
+        {
+            br = new BufferedReader(
+                new InputStreamReader(System.in));
+        }
+ 
+        String next()
+        {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+ 
+        int nextInt() { return Integer.parseInt(next()); }
+ 
+        long nextLong() { return Long.parseLong(next()); }
+ 
+        double nextDouble()
+        {
+            return Double.parseDouble(next());
+        }
+ 
+        String nextLine()
+        {
+            String str = "";
+   
+            try {
+                str = br.readLine();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+  }
+  public static void main(String [] args) throws IOException{
+
+    //Here, we first create an object of the outer class/top level class/ enclosing class
+    Test t = new Test();
+    //Then by using the above described method we create an object for our inner class (non-static)
+    //Test --> Outer class/Top level class
+    //Fast Reader --> Inner class (non-static)
+    Test.FastReader in = t.new FastReader();
+    int b = in.nextInt();
+    out.println(b);
+    out.close();    
+  }
+}
+
+Shadowing:
+Here, if we want to access the ShadowTest member variable x = 0, we use ClassName.this.x (since it is non-static, so we
+use this) i.e ShadowTest.this.x
+We can see this implementation in the method methodInFirstLevel which is inside an inner class.
+In general, refer to member variables that enclose larger scopes by the class name to which they belong.
+
+CODE:
+public class ShadowTest {
+
+    public int x = 0;
+
+    class FirstLevel {
+
+        public int x = 1;
+
+        void methodInFirstLevel(int x) {
+            System.out.println("x = " + x);
+            System.out.println("this.x = " + this.x);
+            System.out.println("ShadowTest.this.x = " + ShadowTest.this.x);
+        }
+    }
+
+    public static void main(String... args) {
+        ShadowTest st = new ShadowTest();
+        ShadowTest.FirstLevel fl = st.new FirstLevel();
+        fl.methodInFirstLevel(23);
+    }
+}
+
+Inner Class Final Example (using Interface):
+
+Here, we created the DataStructureIterator interface which extends the Iterator interface, so all methods of it
+will be inherited in the interface.
+Now, in the main function we instantiated the object of the outer class and we called the printeven method.
+In this method we instantiated the inner class object. Here the inner class is EvenIterator. We instantiated the 
+object by using the interface (as a type) method where it is an object of the implemented inner class (EvenIterator).
+So, instead of using DataStructure.EvenIterator we use DataStructureIterator (interface). And now since it an interface object (implemented class) object, we can access (without typecasting) the next and the hasNext method because they are present in the interface DataStructureIterator (common to both interface and the implemented class). They are overrided in the EvenIterator inner class since it implements the interface.  
+
+
+
+CODE:
+public class DataStructure {
+    
+    // Create an array
+    private final static int SIZE = 15;
+    private int[] arrayOfInts = new int[SIZE];
+    
+    public DataStructure() {
+        // fill the array with ascending integer values
+        for (int i = 0; i < SIZE; i++) {
+            arrayOfInts[i] = i;
+        }
+    }
+    
+    public void printEven() {
+        
+        // Print out values of even indices of the array
+        //Here this refers to the current instance (ds (outerclass --> DataStructure)) 
+        DataStructureIterator iterator = this.new EvenIterator();
+        while (iterator.hasNext()) {
+            System.out.print(iterator.next() + " ");
+        }
+        System.out.println();
+    }
+    
+    interface DataStructureIterator extends java.util.Iterator<Integer> { } 
+
+    // Inner class implements the DataStructureIterator interface,
+    // which extends the Iterator<Integer> interface
+    
+    private class EvenIterator implements DataStructureIterator {
+        
+        // Start stepping through the array from the beginning
+        private int nextIndex = 0;
+        
+        @Override
+        public boolean hasNext() {
+            
+            // Check if the current element is the last in the array
+            return (nextIndex <= SIZE - 1);
+        }        
+        
+        @Override
+        public Integer next() {
+            
+            // Record a value of an even index of the array
+            Integer retValue = Integer.valueOf(arrayOfInts[nextIndex]);
+            
+            // Get the next even element
+            nextIndex += 2;
+            return retValue;
+        }
+    }
+    
+    public static void main(String s[]) {
+        
+        // Fill the array with integer values and print out only
+        // values of even indices
+        DataStructure ds = new DataStructure();
+        ds.printEven();
+    }
+}
+
+The output is:
+
+0 2 4 6 8 10 12 14 
+
+Also, you can use the same modifiers for inner classes that you use for other members of the outer class. For example, you can use the access specifiers private, public, and protected to restrict access to inner classes, just as you use them to restrict access do to other class members.
+
+
+Now there are two types of inner classes (non-static):
+1.Local Classes 
+2.Anonymous Classes
+
+
+1.Local Classes (type of non-static inner class):
+Local classes are classes that are defined in a block, which is a group of zero or more statements between balanced braces. You typically find local classes defined in the body of a "method".
+
+Example:
+public class OuterClass{
+    public void doSomething(){
+        .....
+        class LocalClass{
+            .....
+        }
+
+        LocalClass lc = new LocalClass();
+        .....
+    }
+}
+
+public static void main(String ... args){
+    doSomething();
+}
+
+CODE:
+public class Translation{
+public void sayGoodbyeInEnglish() {
+        class EnglishGoodbye {
+            //In local classes we can use constant member variables
+            public static final String farewell = "Bye bye";
+            public void sayGoodbye() {
+                System.out.println(farewell);
+            }
+        }
+        //Here, we instantiated the object for our local class
+        EnglishGoodbye myEnglishGoodbye = new EnglishGoodbye();
+        myEnglishGoodbye.sayGoodbye();
+    }
+}
+
+public static void main(String ... args){
+    sayGoodbyeInEnglish();
+    //outputs Bye bye    
+}
+
+NOTE: We cannot declare an interface inside a method for the use of local class (implement), this would result into an 
+error.
+
+
+2.Anonymous Classes/Inline Class (type of non-static inner class):
+
+Anonymous classes enable you to make your code more concise. They enable you to declare and instantiate a class at the same time. They are like local classes except that they do not have a name. Use them if you need to use a local class only once. They are generally used in overriding purposes concisely. They can also be used inside a method (like local
+classes) refer the java docs for an example. 
+
+Example 1 (by using interface):
+CODE:
+public class Basic {
+    //We can declare interface inside a class (if we want)
+    interface IGym{
+        void liftWeight();
+    }
+    
+    public static void main(String... args) {
+        
+        //Example of anonymous class (it does not have a name and must be implemented
+        //by an interface or extended by another class)
+        //IGym is used because this anonymous class implements this interface (instead of name we used IGym since anonymous (no name)) 
+        
+        IGym obj = new IGym(){
+            
+            @Override
+            public void liftWeight() {
+                System.out.println("Hammad is lifting weight !!");
+            }
+        };
+        obj.liftWeight();
+    }
+}
+
+Example 2 (by using inheritance):
+CODE:
+public class Basic {
+    public static void main(String... args) {
+        
+    //Here, we have an anonymous class (expression) which extends the Gym class and overrides
+    //the method and it can also have it's own methods (here we have benchPress)
+    //It's fine if we want to use the class only once else the normal way of declaring and instantiating
+    //classes is preferred
+    //Gym is used because this anonymous class extends this class (instead of name we used Gym since anonymous(no name))
+
+        Gym obj = new Gym() {
+            
+            @Override
+            public void liftWeight() {
+                System.out.println("Hammad is lifting weight");
+            }
+
+            @Override          
+            public void compoundExercise() {
+                benchPress();
+            }
+            
+            //Anonymous class (own method) used in overriding the above method
+            public void benchPress() {
+                System.out.println("Hammad is performing benchpress");
+            }
+        };
+        obj.liftWeight();
+        obj.compoundExercise();
+    }
+}
+
+class Gym{
+    public void liftWeight() {
+        System.out.println("Weight - lifting");
+    }
+    public void compoundExercise() {
+        System.out.println("Hammad is ready for performing compound exercises");
+    }
+}
+
+Note that you can declare the following in anonymous classes:
+
+Fields (member variables)
+
+Extra methods (even if they do not implement any methods of the supertype)
+
+Instance initializers
+
+Local classes
+
+However, you cannot declare "constructors" in an anonymous class.
+
+"THERE IS A GREAT EXAMPLE OF USING ANONYMOUS CLASS IN JAVAFX, PLEASE REFER THE JAVA DOCUMENTATION"
+The above example in short is explained below.
+ 
+We can use anonymous classes (only once) when we don't want to create a class and implement an interface and then override the method (of the interface), we can directly use anonymous classes,
+we can see this implementation in java docs for javafx application.
+
+Example (refer java docs --> javafx):
+//The method setOnAction requires an event handler object and event handler is an interface so instead of implementing 
+//this with a class we can use anonymous class here,
+btn.setOnAction(EventHandler<ActionEvent> E)
+T(Type) -> ActionEvent
+
+CODE:
+//Anonymous class body
+btn.setOnAction(new EventHandler<ActionEvent>() {
+    //directly overrided the method of the interface (eventhandler) without creating a class and implementing it
+    //this is passed as an argument to the setOnAction method
+    //since we don't need the object in the future we skip naming it, directly pass to the method
+
+    @Override
+    public void handle(ActionEvent event){
+        System.out.println("Hello World");
+    }
+
+});
+
+
+WHEN TO USE EVERYTHING:
+LOCAL CLASS - Use it if you need to create more than one instance of a (top-level)class, access its constructor, or introduce a new, named type.
+
+NESTED CLASS - Use a non-static nested class (or inner class) if you require access to an enclosing (top-level) instance's non-public fields and methods. Use a static nested class if you don't require this access.
+
+
+

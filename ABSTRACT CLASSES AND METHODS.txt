@@ -1,0 +1,202 @@
+1. Object as a superclass:
+
+Except for the Object class, a class has exactly one direct superclass. A class inherits fields and methods from all its superclasses, whether direct or indirect. A subclass can override methods that it inherits.
+
+The Object class, in the java.lang package, sits at the top of the class hierarchy tree. Every class is a descendant, direct or indirect, of the Object class. Every class you use or write inherits the instance methods of Object. You need not use any of these methods, but, if you choose to do so, you may need to override them with code that is specific to your class. The methods inherited from Object are as follows:
+
+a. clone()
+b. equals()
+c. getClass()
+d. hashCode()
+e. toString()
+
+a. clone():
+The clone() method is used to create a copy from an existing object
+
+b. equals():
+The equals() method compares two objects for equality and returns true if they are equal. To use the equals method we write, ob1.equals(ob2) to compare both the objects (actually values of the objects).
+
+c. getClass():
+The getClass() method returns a Class (is a class in java) object, which has methods you can use to get information about the class, such as its name (getSimpleName()), its superclass (getSuperclass()), and the interfaces it implements (getInterfaces()). For example, obj.getClass().(getSimpleName() or getName()) this returns the name of the class to which the obj belong.
+
+CODE:
+public class Basic {
+	//switch tabs --> ctrl + f6 / ctrl + pageUp | pageDown
+	public static void main(String... args) {
+		Basic bs = new Basic();
+		System.out.println(bs.getClass());
+		//runtime class of an object --> class Basic
+		System.out.println(bs.getClass().getSimpleName());
+		//name of the class --> Basic
+	}
+}
+
+d. hashCode():
+It returns a hash code value of an object.
+
+e. toString():
+String representation of the value of the object.
+
+
+2. Writing final classes and methods:
+
+You can declare some or all of a class's methods final. You use the final keyword in a method declaration to indicate that the method cannot be "overridden" by subclasses. The Object class does this—a number of its methods are final.
+
+Note that you can also declare an entire class final. A class that is declared final cannot be "subclassed". This is particularly useful, for example, when creating an "immutable" class like the String class.
+
+Methods called from constructors should generally be declared final. If a constructor calls a non-final method, a subclass may redefine that method with surprising or undesirable results.
+
+
+3. Abstract methods and fields:
+
+An abstract class is a class that is declared abstract—it may or may not include abstract methods. Abstract classes cannot be instantiated, but they can be subclassed.
+
+An abstract method is a method that is declared without an implementation (without braces, and followed by a semicolon).
+
+If a class includes abstract methods, then the class itself must be declared abstract, as in:
+
+Example:
+
+public abstract class GraphicObject {
+   // declare fields
+   // declare nonabstract methods
+   abstract void draw();
+}
+
+When an abstract class is subclassed, the subclass usually provides implementations for all of the abstract methods in its parent class.
+
+Abstract Classes vs Interfaces:
+
+Consider using abstract classes if any of these statements apply to your situation:
+	You want to share code ("common") among several closely related classes.
+	You expect that classes that extend your abstract class have many common methods or fields, or require access modifiers other than public (such as protected and private).
+	
+Consider using interfaces if any of these statements apply to your situation:
+	You expect that unrelated classes would implement your interface. For example, the interfaces Comparable and Cloneable are implemented by many unrelated classes.
+	You want to specify the behavior of a particular data type, but not concerned about who implements its behavior.
+	You want to take advantage of multiple inheritance of type, since you can extend/implement multiple interfaces.
+
+
+Note that many software libraries use both abstract classes and interfaces, the HashMap class implements several interfaces and also extends the abstract class AbstractMap.	
+
+Example:
+Here, the Circle class inherit methods and fields from the Graphic class and they are closely - related.
+It can access everything from the parent (Graphic) class.
+
+CODE:
+public class Basic {
+	//switch tabs --> ctrl + f6 / ctrl + pageUp | pageDown
+	public static void main(String... args) {
+		
+		Circle c = new Circle(2,3,5);
+		
+		c.draw();
+	
+		System.out.println(c.getX());
+		System.out.println(c.getY());
+		
+	}
+}
+
+abstract class Graphic{
+	private int x,y;
+	
+	//If we declare constructor here, the child (sub) class must explicity call this constructor from it's constructor
+	//using super(), therefore the fields should be common, see below the implementation else it won't work
+	public Graphic(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void moveToNewPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public int getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	//abstract method	
+	abstract void draw();
+}
+
+class Circle extends Graphic{
+	
+	private int rad;
+	public Circle(int x, int y, int rad) {
+		super(x,y);
+		this.rad = rad;
+	}
+	
+	//providing implementation for the abstract method
+	public void draw() {
+		System.out.println("Drawing a circle of radius " + this.rad + " at " +"(" +
+				 super.getX() +"," + super.getY() + ")");
+	}
+	
+	public int getRadius() {
+		return this.rad;
+	}
+}
+
+When Abstract class implements an interface:
+
+In the section on Interfaces, it was noted that a class that implements an interface must implement all of the interface's methods. It is possible, however, to define a class that does not implement all of the interface's methods, provided that the class is declared to be abstract. 
+
+Example:
+
+CODE:
+interface IA{
+	public void walk();
+	public void run();
+	default void talk() {
+		System.out.println("Hammad is talking");
+	}
+}
+
+//Here, it does not give error since the class is declared as abstract so it has the power
+//of not overriding any of the methods present in the interface
+abstract class C implements IA{
+	
+	
+	
+}
+
+//But here since class D extends class C, it has to override all of the methods present in the interface, due to
+//it was all inherited in the class C (since C implements the interface)
+class D extends C{
+
+	public void walk() {
+		
+	}
+	public void run() {
+		
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

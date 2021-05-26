@@ -1,0 +1,131 @@
+Access Modifiers:
+
+Access level modifiers determine whether other classes can use a particular field or invoke a particular method. There are two levels of access 
+control:
+
+At the top level (class, interface, enum) — public, or package-private (no explicit modifier).
+At the member level (fields, member variables, methods) — public, private, protected, or package-private (no explicit modifier).
+
+A class may be declared with the modifier public, in which case that class is visible to all classes everywhere. If a class has no modifier (the 
+default, also known as package-private), it is visible only within its own package (packages are named groups of related classes — you will learn 
+about them in a later lesson.)
+
+At the member level, you can also use the public modifier or no modifier (package-private) just as with top-level classes, and with the same 
+meaning. For members, there are two additional access modifiers: private and protected. The private modifier specifies that the member can only be 
+accessed in its own class. The protected modifier specifies that the member can only be accessed within its own package (as with package-private) 
+and in addition, by a subclass of its class in another package.
+
+
+Modifier       Class Package Subclass World
+public		Y	Y	Y	Y
+
+protected	Y	Y	Y	N
+
+no modifier	Y	Y	N	N
+
+private		Y	N	N	N
+
+The first data column indicates whether the class itself has access to the member defined by the access level. As you can see, a class always has 
+access to its own members. The second column indicates whether classes in the same package as the class (regardless of their parentage) have access to the member. The third column indicates whether subclasses of the class declared outside this package have access to the member. The fourth columnindicates whether all classes have access to the member.
+
+Access levels affect you in two ways. First, when you use classes that come from another source, such as the classes in the Java platform, access 
+levels determine which members of those classes your own classes can use. Second, when you write a class, you need to decide what access level everymember variable and every method in your class should have.
+
+Use the most restrictive access level that makes sense for a particular member. Use private unless you have a good reason not to.
+
+Avoid public fields except for constants (since constants are unchangeable doesn't matter). (Many of the examples in the tutorial use public fields.This may help to illustrate some points concisely, but is not recommended for production code.) Public fields tend to link you to a particular 
+implementation and limit your flexibility in changing your code.
+
+Since, public fields/methods are accesible to the users so we cannot change them abruptly (or regularly because of visible confusion to the user), 
+instead if our field/method is private and is hidden from the outside world we can reguarly upgrade/change it if we want since the actual 
+implementation is always hidden.
+
+
+Example 1:
+CODE:
+
+public class Basic {
+	public static void main(String... args){
+		//we use the 'final' keyword for declaring constants instead of 'const'
+		//'const' is a reserved keyword in java
+		final int a = 5;
+		System.out.println(a);
+	}
+}
+
+Example 2:
+CODE:
+
+1. Demo.java:
+//Here, is a class Demo which is in a package test and has protected (modifier) set to its fields and methods
+
+package test;
+
+public class Demo {
+	
+	protected int value = 5;
+	
+	protected int get() {
+		return this.value;
+	}
+}
+
+2. Basic.java:
+//Here is a class Basic which is another package and is a child class of the Demo, to use it we have to import the entire package or just the class
+//and now since it is a sub-class it has access to its fields and methods (of the Demo class) even if it is set to protected.
+//If we want to use or have access to the protected methods and fields of the class (in another package) we have to create a subclass of it in that package
+
+import test.*;
+public class Basic extends Demo {
+	public static void main(String... args){
+		
+		Basic b = new Basic();
+		System.out.println(b.get());
+		
+	}
+}
+
+Example 3:
+CODE:
+
+1.Demo.java:
+//Here, is a class Demo which is in a package test and has protected (modifier) set to its fields and methods
+
+package test;
+
+public class Demo {
+	
+	protected int value = 5;
+	
+	protected int get() {
+		return this.value;
+	}
+	
+	protected void print() {
+		System.out.println("Hi there!!");
+	}
+}
+
+2. Basic.java:
+//Since Basic is a "sub-class" of Demo it can override it's protected method's even if it is in another package and has access to all protected
+//fields and methods of the parent class (Demo)
+//Basic.java --> A package
+//Demo.java --> B package
+//Both are in different packages
+
+import test.*;
+public class Basic extends Demo{
+	@Override
+	protected void print() {
+		System.out.println("Hello there!!");
+	}
+	
+	public static void main(String... args){
+		
+		Basic b = new Basic();
+		System.out.println(b.get());
+		b.print();
+	}
+}
+
+

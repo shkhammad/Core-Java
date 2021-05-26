@@ -1,0 +1,699 @@
+GENERICS (sort of generalization):
+
+Generics add stability to your code by making more of your bugs detectable at compile time.
+
+In a nutshell, generics enable types (classes and interfaces) to be parameters when defining classes, interfaces and methods. Much like the more familiar formal parameters used in method declarations, type parameters provide a way for you to re-use the same code with different inputs. The difference is that the inputs to formal parameters are values, while the inputs to type parameters are types.
+
+Code that uses generics has many benefits over non-generic code:
+
+1. Stronger type checks at compile time.
+A Java compiler applies strong type checking to generic code and issues errors if the code violates type safety. Fixing compile-time errors is easier than fixing runtime errors, which can be difficult to find.
+
+2. Enabling programmers to implement generic algorithms.
+By using generics, programmers can implement generic algorithms that work on collections of different types, can be customized, and are type safe and easier to read.
+
+Generic Types:
+A generic type is a generic class or interface that is parameterized over types.
+
+A generic class is defined with the following format:
+
+class name<T1, T2, ..., Tn> { /* ... */ }
+
+The type parameter section, delimited by angle brackets (<>), follows the class name. It specifies the type parameters (also called type variables) T1, T2, ..., and Tn (as many as we want).
+
+A type variable can be any non-primitive type you specify: any class type, any interface type, any array type, or even another type variable (see the last example).
+
+This same technique can be applied to create generic interfaces.
+
+The most commonly used type parameter names are:
+
+E - Element (used extensively by the Java Collections Framework)
+K - Key
+N - Number
+T - Type
+V - Value
+
+Example 1 (Single type parameter):
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+		
+		//Here in Demo<Integer>, Integer is the type argument
+		Demo<Integer> d1 = new Demo<>(3);
+		System.out.println(d1.getDummy());
+		
+		Demo<Double> d2 = new Demo<>(2.5);
+		System.out.println(d2.getDummy());
+		
+	}
+}
+
+//Here, <T> is the type parameter i.e the type of value being boxed
+class Demo<T>{
+	
+	private T dummy;
+	public Demo(T dummy) {
+		this.dummy = dummy;
+	}
+	
+	public T getDummy() {
+		return this.dummy;
+	}
+}
+
+Example 2 (Multiple type parameter using interface):
+CODE:
+public class Basic {
+	public static void main(String... args) {
+		
+		A <Integer, String> obj = new A<>(1,"Hammad");
+		
+		System.out.println(obj.getKey());
+		System.out.println(obj.getValue());
+	
+	}
+}
+
+//Here, K --> key , V --> value are the two type parameters here
+interface Demo<K,V>{
+	K getKey();
+	V getValue();
+}
+
+class A<K,V> implements Demo<K,V>{
+	private K key;
+	private V value;
+	
+	public A(K key, V value) {
+		this.key = key;
+		this.value = value;
+	}
+	
+	public K getKey() {
+		return this.key;
+	}
+	
+	public V getValue() {
+		return this.value;
+	}
+}
+
+Parameterized Types (by using bounded type parameters):
+You can also substitute a type parameter (i.e., K or V) with a parameterized type (i.e., List<String>), here
+List is a type which is parameterized using String i.e List of Strings and is fixed.
+
+Example:
+CODE:
+
+import java.util.*;
+public class Basic {
+	public static void main(String... args) {
+		
+		Demo<Integer, ArrayList<String>> obj = new Demo<>(1, new ArrayList<String>());
+		System.out.println(obj.getKey());
+		obj.doSomething();
+		System.out.println(obj.getValue());
+		
+	}
+}
+
+//Here, we have to specify for V that it extends ArrayList<String>, we can use just ArrayList but it gives 
+//a warning that it is a raw type, please parameterized it, so it's better to specify the <String> part
+//By using extends we can now use all of the methods present in the ArrayList class so here, we have used the
+//add method in the doSomething method
+
+
+class Demo<K,V extends ArrayList<String>>{
+	private K key;
+	private V value;
+	//V --> ArrayList<String>, value --> obj --> of type of ArrayList
+		
+	public Demo(K key, V value){
+		this.key = key;
+		this.value = value;
+	}
+	
+	public K getKey() {
+		return this.key;
+	}
+	
+	public V getValue() {
+		 return this.value;
+	}
+	
+	public void doSomething() {
+		this.value.add("hammad"); 
+		this.value.add("samina"); 
+	}	
+}
+
+
+Raw Types:
+
+A raw type is the name of a generic class or interface without any type arguments. For example, given the generic Box class:
+
+public class Box<T> {
+    public void set(T t) { /* ... */ }
+    // ...
+}
+
+To create a parameterized type of Box<T>, you supply an actual type argument for the formal type parameter T:
+
+Box<Integer> intBox = new Box<>();
+If the actual type argument is omitted, you create a raw type of Box<T>:
+
+Box rawBox = new Box();
+
+Therefore, Box is the raw type of the generic type Box<T>. However, a non-generic class or interface type is not a raw type.
+
+Raw types show up in legacy code because lots of API classes (such as the Collections classes) were not generic prior to JDK 5.0. When using raw types, you essentially get pre-generics behavior — a Box gives you Objects. For backward compatibility, assigning a parameterized type to its raw type is allowed:
+
+Box<String> stringBox = new Box<>();
+Box rawBox = stringBox;               // OK
+
+But if you assign a raw type to a parameterized type, you get a warning:
+Box rawBox = new Box();           // rawBox is a raw type of Box<T>
+Box<Integer> intBox = rawBox;     // warning: unchecked conversion
+
+To completely disable unchecked warnings, use the -Xlint:-unchecked flag. The @SuppressWarnings("unchecked") annotation suppresses unchecked warnings. If you are unfamiliar with the @SuppressWarnings syntax, see Annotations.
+
+Example:
+
+CODE:
+import java.util.*;
+public class Basic {
+	public static void main(String... args) {
+	
+	 ArrayList<Integer> ls = new ArrayList<>();
+	 ls.add(1);
+	 ls.add(2);
+	 ls.add(3);
+
+	 //we can use the following annotation to suppress the warnings, if we don't want it during compilation
+	 @SuppressWarnings("unchecked")
+	 ArrayList<Integer> ls2 = new ArrayList();
+	 ls2.add(1);
+	 ls2.add(2);
+	 ls2.add(3);
+ 
+ }
+}
+
+Generic Methods:
+
+Generic methods are methods that introduce their own type parameters. This is similar to declaring a generic type, but the type parameter's scope is limited to the method where it is declared. Static and non-static generic methods are allowed, as well as generic class constructors.
+
+The syntax for a generic method includes a list of type parameters, inside angle brackets, which appears before the method's return type. For static generic methods, the type parameter section must appear before the method's return type.
+
+Example:
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+		
+		Demo<Integer, String> obj1 = new Demo<>(1,"hammad");
+	
+		Demo<Integer, String> obj2 = new Demo<>(1,"h");
+		
+		System.out.println(Demo2.compare(obj1,obj2));
+	}
+}
+
+class Demo<K,V>{
+	private K key;
+	private V value;
+	
+	public Demo(K key, V value){
+		this.key = key;
+		this.value = value;
+	}
+	
+	public K getKey() {
+		return this.key;
+	}
+	
+	public V getValue() {
+		 return this.value;
+	}
+}
+
+class Demo2{
+	
+	//Generic Method
+	public static <K,V> boolean compare(Demo<K,V> obj1, Demo<K,V> obj2) {
+		return obj1.getKey().equals(obj2.getKey()) && obj1.getValue().equals(obj2.getValue());
+	}
+	
+}
+
+
+BOUNDED TYPE PARAMETERS:
+
+There may be times when you want to restrict the types that can be used as type arguments in a parameterized type. For example, a method that operates on numbers might only want to accept instances of Number or its subclasses. This is what bounded type parameters are for.
+
+To declare a bounded type parameter, list the type parameter's name, followed by the extends keyword, followed by its upper bound, which in this example is Number. Note that, in this context, extends is used in a general sense to mean either "extends" (as in classes) or "implements" (as in interfaces).
+
+Bounded type parameters allow you to invoke methods defined in the bounds as seen in the below example,
+
+
+public class NaturalNumber<T extends Integer> {
+
+    private T n;
+
+    public NaturalNumber(T n)  { this.n = n; }
+
+    public boolean isEven() {
+        return n.intValue() % 2 == 0;
+    }
+
+    // ...
+}
+
+The isEven method invokes the intValue method defined in the Integer class through n.
+
+Example (with bounded type parameters): 
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+		System.out.println(Demo2.compare(3, 2));
+	}
+}
+
+
+class Demo2{
+	
+	//Generic Method
+	//Here, we have used extends Comparable<T>, now we can use compareTo method of the Comparable interface
+	//and compare two objects (and return the result according to inside implementation)
+	public static <T extends Comparable<T>> int compare(T obj1, T obj2) {
+		return obj1.compareTo(obj2);
+	}
+}
+
+
+Generics, inheritance and subtypes:
+
+As you already know, it is possible to assign an object of one type to an object of another type provided that the types are compatible. For example, you can assign an Integer to an Object, since Object is one of Integer's supertypes:
+
+Object someObject = new Object();
+Integer someInteger = new Integer(10);
+someObject = someInteger;   // OK
+
+In object-oriented terminology, this is called an "is a" relationship. Since an Integer is a kind of Object, the assignment is allowed. But Integer is also a kind of Number, so the following code is valid as well:
+
+public void someMethod(Number n) { /* ... */ }
+
+someMethod(new Integer(10));   // OK
+someMethod(new Double(10.1));   // OK
+
+Given two concrete types A and B (for example, Number and Integer), MyClass<A> has no relationship to MyClass<B>, regardless of whether or not A and B are related. The common parent of MyClass<A> and MyClass<B> is Object
+(refer java docs for more info)
+
+
+Example 1 (using interface):
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+		
+		Demo<Integer> d = new Demo<>(2);
+		
+		System.out.println(d.IPrintType());
+		
+		System.out.println(d.compareTo(3));
+	}
+}
+
+interface PayLoadList<T> extends Comparable<T>{
+	T IPrintType();
+}
+
+class Demo<T> implements PayLoadList<T>{
+	private T obj;
+	
+	public Demo(T obj) {
+		this.obj = obj;
+	}
+	
+	@Override
+	public T IPrintType() {
+		return this.obj;
+	}
+	
+	@Override
+	public int compareTo(T obj){
+		if((int)this.obj - (int)obj >= 0) return 1;
+		return -1;
+	}
+	
+}
+
+Example 2:
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+		
+		Demo<Integer> d = new Demo<>(2);
+		
+		System.out.println(d.printType());
+		
+		System.out.println(d.compare(3));
+	}
+}
+
+class Demo<T extends Comparable<T>>{ 
+	private T obj;
+	
+	public Demo(T obj) {
+		this.obj = obj;
+	}
+	
+	public T printType() {
+		return this.obj;
+	}
+	
+	public int compare(T obj){
+		return this.obj.compareTo(obj);
+	}
+	
+}
+
+
+WILDCARDS:
+
+In generic code, the question mark (?), called the wildcard, represents an unknown type. The wildcard can be used in a variety of situations: as the type of a parameter, field, or local variable.
+
+
+UPPER BOUNDED WILDCARDS:
+
+To declare an upper-bounded wildcard, use the wildcard character ('?'), followed by the extends keyword, followed by its upper bound. Note that, in this context, extends is used in a general sense to mean either "extends" (as in classes) or "implements" (as in interfaces).
+
+To write the method that works on lists of Number and the subtypes of Number, such as Integer, Double, and Float, you would specify List<? extends Number>. The term List<Number> is more restrictive than List<? extends Number> because the former matches a list of type Number only, whereas the latter matches a list of type Number or any of its subclasses.
+
+Example:
+
+CODE:
+
+import java.util.*;
+public class Basic {
+
+	//Here, the Number class is the upper bound so we can pass any type of it's subclass or Number itself
+	//Here, we passed Integer and double both works properly	
+	public static double calculate(List<? extends Number> ls){
+		double sum=0;
+		//Since, Number is the upper bound we used the 'val' type as Number here 
+		//So we can say that Integer is also a number and double is also a number and not vice-versa
+		//we used doubleValue since double is the bigger datatype here and can take integer as well in itself
+		for(Number val: ls) 
+			sum+=val.doubleValue();
+		
+		return sum;
+	}
+
+	public static void main(String... args) {
+		
+		List<Integer> ls = Arrays.asList(1,2,3);
+
+		List<Double> ls2 = Arrays.asList(1.0,2.0,3.0);
+
+		System.out.println(calculate(ls));
+		System.out.println(calculate(ls2));
+	}
+}
+
+UNBOUNDED WILDCARDS:
+
+T --> TYPE
+
+The unbounded wildcard type is specified using the wildcard character (?), for example, List<?>. This is called a list of unknown type. There are two scenarios where an unbounded wildcard is a useful approach:
+
+If you are writing a method that can be implemented using functionality provided in the Object class.
+When the code is using methods in the generic class that don't depend on the type parameter. For example, List.size or List.clear. In fact, Class<?> is so often used because most of the methods in Class<T> do not depend on T.
+
+Example:
+
+CODE:
+
+import java.util.*;
+public class Basic {
+	
+	//We can have here a generic type parameter List<>
+	//Since if we pass anything like arraylist or linked list
+	//it will accept because arraylist is a type of list so as
+	//the linked list
+	public static void calculate(List<?> ls){
+		
+		//here we use object again a generic since anything is 
+		//type of an object, here integer is a type of an object
+		//since (integer extends object)
+		
+		for(Object val: ls) 
+		System.out.println(val);
+	}
+	
+	public static void main(String... args) {
+	
+		//Here we can pass String, Double or anything instead of Integer because are all objects i.e all classes
+		//extends the Object class directly or indirectlty
+		LinkedList<Integer> ls = new LinkedList<>();
+		ls.add(4);
+		ls.add(7);
+		ls.add(8);
+		calculate(ls);
+	}
+}
+
+
+LOWER BOUNDED WILCARDS:
+
+A lower bounded wildcard restricts the unknown type to be a specific type or a super type of that type.
+
+A lower bounded wildcard is expressed using the wildcard character ('?'), following by the super keyword, followed by its lower bound: <? super A>.
+
+Note: You can specify an upper bound for a wildcard, or you can specify a lower bound, but you cannot specify both.
+Say you want to write a method that puts Integer objects into a list. To maximize flexibility, you would like the method to work on List<Integer>, List<Number>, and List<Object> — anything that can hold Integer values.
+
+To write the method that works on lists of Integer and the supertypes of Integer, such as Integer, Number, and Object, you would specify List<? super Integer>. The term List<Integer> is more restrictive than List<? super Integer> because the former matches a list of type Integer only, whereas the latter matches a list of any type that is a supertype of Integer.
+
+Example:
+
+CODE:
+
+import java.util.*;
+public class Basic {
+	
+	public static void calculate(List<? super Integer> ls){
+		
+		
+		for(int i=0;i<3;i++)
+		ls.add(i+4);
+		
+		System.out.println(ls);
+	}
+	
+	public static void main(String... args) {
+		
+		//Here, we can pass Integer, Number, Object, etc i.e super types of Integer including Integer itself
+		ArrayList<Integer> ls = new ArrayList<>();
+		//ArrayList<Number> ls = new ArrayList<>(); is the same here --> super-type
+		ls.add(1);
+		ls.add(2);
+		ls.add(3);
+		calculate(ls);
+	}
+}
+
+
+WILDCARDS AND SUBTYPING (refer java docs for more info):
+
+Given the following two regular (non-generic) classes:
+
+//parent-class
+class A { /* ... */ }
+//child-class
+class B extends A { /* ... */ }
+
+It would be reasonable to write the following code:
+
+B b = new B();
+A a = b;
+(parent)  = (child) and not the vice-versa i.e, 
+(child) != (parent) 
+
+This example shows that inheritance of regular classes follows this rule of subtyping: class B is a subtype of class A if B extends A. This rule does not apply to generic types:
+
+List<B> lb = new ArrayList<>();
+List<A> la = lb;   // compile-time error
+
+Although Integer is a subtype of Number, List<Integer> is not a subtype of List<Number> and, in fact, these two types are not related. The common parent of List<Number> and List<Integer> is List<?>.
+
+In order to create a relationship between these classes so that the code can access Number's methods through List<Integer>'s elements, use an upper bounded wildcard:
+
+List<? extends Integer> intList = new ArrayList<>();
+List<? extends Number>  numList = intList;  // OK. 
+
+List<? extends Integer> is a subtype of List<? extends Number>
+
+Because Integer is a subtype of Number, and numList is a list of Number objects, a relationship now exists between intList (a list of Integer objects) and numList.
+
+
+Example 1:
+CODE:
+
+import java.math.*;
+public class Basic {
+	public static void main(String... args) {
+		
+	//Since the type is an upper bounded wildcard and upper bound is the Number class we can pass 
+	//anything to the class constructor argument i.e Number class and all it's sub-classes
+	//Here, we have Double, BigInteger, Long all passed as argument to the constructor of the Demo class
+	//since all of them extends the Number class (are child of it).
+	Demo<? extends Number> d = new Demo<>(2.0);	
+	
+	Demo<? extends Number> d2 = new Demo<>(new BigInteger("20000000000000000000000"));	
+	
+	@SuppressWarnings("deprecation")
+	Demo<? extends Number> d3 = new Demo<>(new Long ("200000000000000"));	
+	
+	d.doSomething();
+	
+	System.out.println(d.getObject());
+	
+	System.out.println(d2.getObject());
+	
+	System.out.println(d3.getObject());
+	
+	}	
+}
+
+class Demo<T>{
+	private T obj;
+	public Demo(T obj) {
+		this.obj = obj;
+	}
+	
+	
+	public void doSomething() {
+		System.out.println("HI");
+	}
+	
+	public T getObject() {
+		return this.obj;
+	}
+}
+
+Example 2:
+CODE:
+
+public class Basic {
+	public static void main(String... args) {
+	Demo<? extends Number> d0 = new Demo<>(2.5);	
+	DemoChild<? extends Number> dc = new DemoChild<>(0.4567);
+	
+	System.out.println(d0.getObject());
+	System.out.println(dc.getObject());
+	
+	//Here, below the DemoChild becomes the child class 
+	//Demo becomes the parent class
+	//As Integer extends the  Number class, it becomes
+	//Demo<? extends Number> d = new DemoChild<>(2);
+	//So now the dc2 object (DemoChild class) can access the the methods and fields
+	//of the parent class Demo (because now it extends Demo)
+	
+	//There is a "is a" relationship between Number and the Integer class
+	//We can say Integer is a (kind of) Number
+	//But Number is not (kind of) Integer, this is wrong as
+	//Integer --> child, Number --> parent
+	//Integer extends Number class in java
+	//Here, we can relate DemoChild is Demo
+	//But Demo is not DemoChild
+
+	DemoChild<? extends Integer> dc2 = new DemoChild<>(2);
+	Demo<? extends Number> d = dc2;
+	//(parent) = (child)
+	//(Number) = (Integer)
+	//(Demo) = (DemoChild)
+	//(larger) = (smaller)
+	//(smaller) != (larger)
+
+
+	dc2.doSomething();
+	System.out.println(dc2.getObject());
+	System.out.println(dc2.getValue());
+	System.out.println(d.getObject());
+	d.doSomething();
+	
+	}	
+}
+
+class Demo<T>{
+	private T obj;
+	
+	public Demo(T obj) {
+		this.obj = obj;
+	}
+	
+	
+	public void doSomething() {
+		System.out.println("HI");
+	}
+	
+	public T getObject() {
+		return this.obj;
+	}
+}
+
+class DemoChild<T> extends Demo<T>{
+	private int value;
+	
+	public DemoChild(T obj) {
+		super(obj);
+		value = 5;
+	}
+	
+	public int getValue() {
+		return this.value;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

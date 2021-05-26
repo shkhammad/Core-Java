@@ -1,0 +1,85 @@
+An enum type is a special data type that enables for a variable to be a set of predefined constants. The variable must be equal to one of the values that have been predefined for it. Common examples include compass directions (values of NORTH, SOUTH, EAST, and WEST) and the days of the week.
+
+
+Because they are constants, the names of an enum type's fields are in uppercase letters.
+
+You can declare enum inside a class, if you want.
+In the Java programming language, you define an enum type by using the enum keyword. For example, you would specify a days-of-the-week enum type as:
+
+
+public enum Day {
+    SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
+    THURSDAY, FRIDAY, SATURDAY 
+}
+
+You should use enum types any time you need to represent a fixed set of constants. That includes natural enum types such as the planets in our solar system and data sets where you know all possible values at compile time—for example, the choices on a menu, command line flags, and so on.
+
+Example 1:
+CODE:
+public class Basic {
+	public static void main(String... args) {
+		
+		System.out.println(Family.HAMMAD);
+		//HAMMAD
+		for(Family name : Family.values())
+			System.out.println(name);
+		//SIKANDAR SAMINA HAMMAD
+		
+		//Here, a variable is created named "value" of type Family (enum type) and is initialized to "HAMMAD" 
+		Family value = Family.HAMMAD;
+		System.out.println(value);
+		//HAMMAD
+	}
+}
+
+enum Family{
+	SIKANDAR, SAMINA, HAMMAD;
+}
+
+
+Example 2:
+CODE:
+package test;
+
+public enum MathematicalConstants {
+	//constants or member variables are always declared first inside the enum
+	//the list of enum constants must end with a semicolon
+		
+	PI(3.14159),
+	E(2.7182),
+	GR(1.6180);
+	
+	//member variable
+	private double constantValue;
+	
+	//only private access modifier is allowed for the enum's constructor
+	// It automatically creates the constants that are defined at the beginning of the enum body. You cannot invoke an enum constructor yourself
+
+	private MathematicalConstants(double constantValue) {
+		this.constantValue = constantValue;
+	}
+
+	public double getConstantValue() {
+		return this.constantValue;
+	}
+	
+	public static void main(String... args) {
+		//whenever the constant (actually like an object) is declared the value inside the parenthesis get
+		//passed to the constructor and the member variable constant value get set
+		//with the value in the parenthesis
+		//Now the constants inside an enum are like object we can access the methods
+		//inside it, here the method getconstantvalue returns the field constant 
+		//value which was earlier set in the constructor
+		System.out.println(PI.getConstantValue());
+		for(MathematicalConstants c : MathematicalConstants.values()) {
+			System.out.println(c + " " + c.getConstantValue());
+		}
+	}
+	
+}
+
+
+
+
+
+

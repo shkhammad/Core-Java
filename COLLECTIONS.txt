@@ -1,0 +1,493 @@
+COLLECTIONS FRAMEWORK:
+
+Sorted Set Interface:
+
+A SortedSet is a Set that maintains its elements in ascending (can be changed to descending order using reverseOrder method) order, sorted accordingto the elements' natural ordering or according to a Comparator provided at SortedSet creation time.
+
+Since it is an interface it cannot be instantiated, the only class that implements it is TreeSet which uses tree for storing the elements.
+
+So we can call the constructor of the TreeSet class during creation of the object and use it successfully (we can do this in java refer interfaces).
+
+Or we can directly use the TreeSet class since it implements SortedSet the result will be same (plus some additional methods of the TreeSet class)
+
+Example:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		
+		//for storing elements in decreasing order in the set
+		//SortedSet<Integer> st = new TreeSet<Integer>(Collections.reverseOrder());
+		
+		SortedSet<Integer> st = new TreeSet<Integer>();
+		
+		//or can directly do this, the result will be same
+		//TreeSet<Integer> st = new TreeSet<Integer>();		
+
+
+		st.add(3);
+		st.add(2);
+		st.add(1);
+		System.out.println(st.toString());
+		
+		//for printing the elements of the sorted/tree set
+		for(int val: st)
+			System.out.println(val);
+		
+		System.out.println(st.first());
+		System.out.println(st.last());
+		
+		if(st.contains(2))
+			System.out.println("true");
+		
+		if(!st.isEmpty())
+			System.out.println("true");
+		
+		st.remove(1);
+		
+		System.out.println(st.size());
+		
+		st.clear();
+		
+		System.out.println(st.toString());
+		
+	}
+}
+
+
+Sorted Map Interface:
+
+A SortedMap is a Map that maintains its entries in ascending order, sorted according to the "keys" natural ordering, or according to a Comparator 
+provided at the time of the SortedMap creation.
+
+Since it is an interface it cannot be instantiated, the only class that implements it is TreeMap which uses tree for storing the elements.
+
+So we can call the constructor of the TreeMap class during creation of the object and use it successfully (we can do this in java refer interfaces).
+
+Or we can directly use the TreeMap class since it implements SortedMap the result will be same (plus some additional methods of the TreeMap class)
+
+Example 1:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		
+		
+		//for storing elements in decreasing order (based on "key" value) in the map
+		//SortedMap<Integer,Integer> mp = new TreeMap<>(Collections.reverseOrder());
+		
+		SortedMap<Integer,Integer> mp = new TreeMap<>();
+	
+				
+		//or can directly do this, the result will be same
+		//TreeMap<Integer> st = new TreeMap<Integer>();		
+	
+		mp.put(3,6);
+		mp.put(1,6);
+		mp.put(2,6);
+		
+		System.out.println(mp.toString());
+		
+		//for printing the elements of the sorted/tree map
+		for(int val: mp.keySet())
+			System.out.println(val + " " + mp.get(val));
+		
+		System.out.println(mp.firstKey());
+		
+		System.out.println(mp.lastKey());
+		
+		System.out.println(mp.values());
+		
+		if(mp.containsValue(6))
+			System.out.println("true");
+		
+		mp.remove(2);
+		
+		System.out.println(mp.size());
+		
+		mp.clear();
+			
+	}
+}
+
+Example 2:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		
+		//for decreasing order (based on keys --> ascii value in case of a character)
+		//SortedMap<Integer,Integer> mp = new TreeMap<>(Collections.reverseOrder());
+		
+		//this works even the key is a character 
+		//like from a-z a is first, b is second and so on
+		//identifies and sorts based on ascii value
+		//A-Z then a-z (the latter will come afterwards since its ascii value is greater)
+ 
+		SortedMap<Character,Integer> mp = new TreeMap<>();
+		
+		mp.put('b',6);
+		mp.put('c',6);
+		mp.put('a',6);
+		
+		System.out.println(mp.toString());
+		//this prints {a=6, b=6, c=6}
+
+		for(char val: mp.keySet())
+			System.out.println(val + " " + mp.get(val));
+		
+		System.out.println(mp.firstKey());
+		
+		System.out.println(mp.lastKey());
+		
+		System.out.println(mp.values());
+		
+		if(mp.containsValue(6))
+			System.out.println("true");
+		
+		mp.remove('b');
+		
+		System.out.println(mp.size());
+		
+		mp.clear();
+			
+	}
+}
+
+Immutable Classes:
+
+All wrapper classes (Integer, String, Boolean etc) are immutable in java.
+Immutable class means that once an object is created, we cannot change its content.
+Use StringBuilder instead of String always while solving problems.
+
+Comparable Interface:
+
+Use the Comparator Interface instead, more accustomed
+
+Comparator Interface:
+
+The comparator interface is very useful in case where we want to sort the objects and they don't have a natural ordering by default.
+It is used in the case of user defined classes which have unnatural ordering.
+We can pass the comparator object to the sort method to give an idea of the ordering of the objects (greater, less, equal) to the sort method (see
+below examples)
+Rest sorting work is done by the sort method implicitly based on the comparator provided to it.
+The Comparator can be passed as a parameter to Arrays.sort/Collections.sort methods to allow precise control over the sort order.
+
+Example 1:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(2,18));
+		ls.add(new Student(21,10));
+		ls.add(new Student(40,20));
+	
+		//Here we used to the concept of anonymous classes, instead of creating a new class and implementing the comparator
+		//in it (overriding) the compare method we directly create (implement) the class here after the object creation (short way)
+		//and overrided the compare method, the comparator type is Student as it compares two students in the compare method
+		//the compare method should always return 1,0,-1 for greater, equal, less than case (refer docs)
+		//the return statements should always be written once for values 1,0,-1  
+		//duplicate statements (on different logic/idea) both returning the same value (1,0,-1) is invalid or is of no use
+		//the idea/logic should be same for all cases (1,0,-1)		
+		//for example it can be either comparision or length (in case of Strings) and not both
+
+		Collections.sort(ls, new Comparator<Student>(){
+			@Override
+			public int compare(Student s1, Student s2) {
+				//we don't use this because it might result in an overflow
+				//descending order
+				//return s2.getMarks() - s1.getMarks();
+				//ascending order
+				//return s1.getMarks() - s2.getMarks();
+				//descending order
+				return (s1.getMarks() < s2.getMarks()) ? 1 : ((s1.getMarks() == s2.getMarks() ? 0 : -1)); 
+			}
+		});
+		
+		for(int i=0;i<3;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getMarks());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private int marks;
+	public Student(int roll_no, int marks) {
+		this.roll_no = roll_no;
+		this.marks = marks;
+	}
+	public int getMarks() {
+		return this.marks;
+	}
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+}
+
+Example 2:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(2,18));
+		ls.add(new Student(21,10));
+		ls.add(new Student(40,20));
+			
+		//Here, we created a class that implements the comparator interface and passed it's object in the sort method, the class
+		//overrides the compare method of the comparator interface, here the compare class is made generic for containing the type Student
+		//since the comparator interface is always generic type and not a raw type
+		//we can do this in java (refer interfaces)
+		//any interface object can be created (not instantiated) by calling the constructor of the implementing class
+		//here the object 'c' gets accessed to all the methods that are overrided in the Compare class, in this case the compare method
+		//here we can say that the compare class is a type of a Comparator as it implements it and overrides compare and thus we can pass it
+		//to the sort method (type --> Comparator --> Compare)
+		Comparator<Student> c = new Compare<>();
+
+		Collections.sort(ls,c);
+		
+		for(int i=0;i<3;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getMarks());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private int marks;
+	public Student(int roll_no, int marks) {
+		this.roll_no = roll_no;
+		this.marks = marks;
+	}
+	public int getMarks() {
+		return this.marks;
+	}
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+}
+
+class Compare<T> implements Comparator<Student>{
+	@Override
+	public int compare(Student s1, Student s2) {
+		//return s2.getMarks() - s1.getMarks();
+		return (s1.getMarks() < s2.getMarks()) ? 1 : ((s1.getMarks() == s2.getMarks() ? 0 : -1)); 
+	}
+}
+
+Example 3:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(2,18));
+		ls.add(new Student(21,10));
+		ls.add(new Student(40,20));
+			
+		//Or simply we can directly pass the object of the compare class which implements Comparator and overrides the compare method
+		//of the Comparator interface in the sort method
+		//Comparator is a generic and not a raw type of interface
+		//Also the Compare class need "not" to be "generic" as in the previous example
+		Collections.sort(ls, new Compare());
+		
+		for(int i=0;i<3;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getMarks());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private int marks;
+	public Student(int roll_no, int marks) {
+		this.roll_no = roll_no;
+		this.marks = marks;
+	}
+	public int getMarks() {
+		return this.marks;
+	}
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+}
+
+class Compare implements Comparator<Student>{
+	@Override
+	public int compare(Student s1, Student s2) {
+		//return s2.getMarks() - s1.getMarks();
+		//ascending order
+		//return (s1.getMarks() < s2.getMarks()) ? -1 : ((s1.getMarks() == s2.getMarks() ? 0 : 1)); 
+		//descending order
+		return (s1.getMarks() < s2.getMarks()) ? 1 : ((s1.getMarks() == s2.getMarks() ? 0 : -1)); 
+	}
+}
+
+Example 4:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(10,"Hammad"));
+		ls.add(new Student(20,"Imran"));
+		ls.add(new Student(40,"Arbaz"));
+			
+		
+		Collections.sort(ls, new Compare());
+		
+		for(int i=0;i<3;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getName());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private String name;
+	
+	public Student(int roll_no, String name) {
+		this.roll_no = roll_no;
+		this.name = name;
+	}
+
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+}
+
+class Compare implements Comparator<Student>{
+	@Override
+	public int compare(Student s1, Student s2) {
+		//here we compare two strings lexographically which is smaller or greater than the other
+		//we can h < i and i < z  and A < a based on ascii values
+		//compareTo method is a default method in the String class 
+		//the smaller of the two strings should come first or be swapped i.e ascending order of strings
+		return (s1.getName().compareTo(s2.getName()));
+	}
+}
+
+Example 5:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(10,"Hammad"));
+		ls.add(new Student(15,"Ha"));
+			
+		
+		Collections.sort(ls, new Compare());
+		
+		for(int i=0;i<2;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getName());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private String name;
+	
+	public Student(int roll_no, String name) {
+		this.roll_no = roll_no;
+		this.name = name;
+	}
+
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+}
+
+class Compare implements Comparator<Student>{
+	@Override
+	
+	//here we create our own comparator function for comparing two strings
+	//the compareto method in the String class makes the smaller string to come (swap) first and not the other way round
+	//here we build the compare function such that larger string comes first i.e descending order of strings
+	public int compare(Student s1, Student s2) {
+		int i,j=0,n=s2.getName().length();
+		for(i=0;i<s1.getName().length();i++) {
+			
+			if((int) s1.getName().charAt(i) < (int) s2.getName().charAt(j))
+				return 1;
+			else if ((int) s1.getName().charAt(i) > (int) s2.getName().charAt(j))
+				return -1;
+			j++;
+			if(j == n) break;
+		}
+		return 0;
+	}
+}
+
+Example 6:
+CODE:
+
+import java.util.*;
+public class Basic{
+	public static void main(String... args){
+		ArrayList<Student> ls = new ArrayList<>();
+		
+		ls.add(new Student(10,"Hammad"));
+		ls.add(new Student(15,"Sikandar"));
+		ls.add(new Student(25,"Sam"));
+		
+		Collections.sort(ls, new Compare());
+		
+		for(int i=0;i<3;i++) {
+			System.out.println(ls.get(i).getRollNumber() + " " + ls.get(i).getName());
+		}
+	}
+}
+
+class Student{
+	private int roll_no;
+	private String name;
+	
+	public Student(int roll_no, String name) {
+		this.roll_no = roll_no;
+		this.name = name;
+	}
+
+	public int getRollNumber() {
+		return this.roll_no;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+}
+
+class Compare implements Comparator<Student>{
+	@Override
+	//here we have a comparator based on the length of the string
+	//so the largest string will be first and the smallest will be last
+	//descending order based on the length of the string
+	public int compare(Student s1, Student s2) {
+		return (s1.getName().length() < s2.getName().length()) ? 1 : (s1.getName().length() == s2.getName().length() ? 0 : -1);
+	}
+}
+
