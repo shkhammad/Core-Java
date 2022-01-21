@@ -25,6 +25,7 @@ Static Nested Classes:
 To create an object for the static nested class we use,
 OuterClass.StaticNestedClass nestedObj = new OuterClass.StaticNestedClass();
 
+Example 1:
 CODE:
 public class Test {
  
@@ -79,13 +80,39 @@ public class Test {
   public static void main(String [] args) throws IOException{
   	//Here we instantiate the static nested class object as per the above described method
 	//Test --> Outer class/Top level class
-    //Fast Reader --> Static nested class
+        //Fast Reader --> Static nested class
 	Test.FastReader in = new Test.FastReader();
 	int b = in.nextInt();
 	out.println(b);
 	out.close();	
   }
 } 
+
+Example 2:
+CODE:
+public class Basic {
+
+ //this --> current object/instance	
+ //static --> no objects/instances
+
+ //val needs to be static in order to get accessed from the inner class (Inner) since it is also static
+ static int val = 5;	
+ 
+ static class Inner{
+	static int x  = 2;
+	public static void print(){
+		System.out.println(x + " " + val);
+	}
+ }
+ 
+ public static void main(String ... args) throws IOException {
+	
+	Inner.print();
+	System.out.println(val);
+	System.out.println(Inner.x);
+ }
+}
+
 
 Type 2:
 Inner Classes (non-static):
@@ -95,7 +122,6 @@ OuterClass outObj = new OuterClass();
 OuterClass.InnerClass inObj = outObj.new InnerClass();
 
 CODE:
-
 public class Test {
  
  final static PrintWriter out = new PrintWriter(System.out);
